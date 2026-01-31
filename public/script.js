@@ -1,5 +1,6 @@
 // @ts-nocheck
 let produtos = [];
+let valorTotalProdutos
 let modal = document.getElementById("modalEditar");
 let closeBtn = document.querySelector(".close");
 let formProduto = document.getElementById("formProduto");
@@ -127,6 +128,7 @@ async function carregarProdutos() {
   console.log("Carregando produtos do backend");
   const response = await fetch("http://localhost:3000/products");
   const products = await response.json();
+  produtos = products.length
   for (let product of products) {
     const productTr = document.createElement("tr");
     const productName = document.createElement("td");
@@ -171,6 +173,7 @@ async function carregarProdutos() {
 
     tabelaProdutos.append(productTr);
   }
+  atualizarResumo()
 }
 
 function atualizarTabela(dados) {
@@ -178,7 +181,30 @@ function atualizarTabela(dados) {
   console.log("Atualizando tabela com dados:", dados);
 }
 
-function atualizarResumo() {
-  // Esta função atualizará os cards de resumo
-  console.log("Atualizando resumo de estoque");
+function calcularValorTotal(products) {
+  return products.reduce((total, product) => {
+    return total + (product.price * product.quantity);
+  }, 0);
 }
+
+async function atualizarResumo() {
+  const response = await fetch("http://localhost:3000/products");
+  const products = await response.json();
+  
+  const totalProdutos = products.length;
+  const totalItens = products.reduce((sum, p) => sum + p.quantity, 0);
+  const valorTotal = calcularValorTotal(products);
+  const produtosEmFalta = products.filter(p => p.quantity === 0).length;
+
+  document.getElementById("totalProdutos").innerText = totalProdutos;
+  document.getElementById("totalItens").innerText = totalItens;
+  document.getElementById("valorTotal").innerText = `R$ ${valorTotal.toLocaleString("pt-BR")}`;
+  document.getElementById("produtosEmFalta").innerText = produtosEmFalta;
+}
+  const valorTotal = calcularValorTotal(produtos);
+  const produtosEmFalta = produtos.filter(p => p.quantity === 0).length;
+
+  document.getElementById("totalProdutos").innerText = totalProdutos;
+  document.getElementById("totalItens").innerText = totalItens;
+  document.getElementById("valorTotal").innerText = `R$ ${valorTotal.toLocaleString("pt-BR")}`;
+  document.getElementById("produtosEmFalta").innerText = produtosEmFalta;
