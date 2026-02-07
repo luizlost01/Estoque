@@ -1,22 +1,22 @@
 import { prisma } from '../lib/prisma.js'
 
 export const createProduct = async (data) => {
-    return await prisma.produtos.create({data})
+    return prisma.produtos.create({data})
 }
 
 export const getAllProducts = async () => {
-    return await prisma.produtos.findMany()
+    return prisma.produtos.findMany()
 } 
 
 export const updateProduct = async (id, data) => {
-    return await prisma.produtos.update({
+    return prisma.produtos.update({
         where: {id},
         data
     })
 }
 
 export const deleteProduct = async (id) => {
-    return await prisma.produtos.delete({
+    return prisma.produtos.delete({
         where: {id}
     })
 } 
