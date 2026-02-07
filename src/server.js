@@ -1,5 +1,5 @@
 import Express from "express";
-import { prisma } from "./utils/prisma.js";
+import { prisma } from "./lib/prisma.js";
 import cors from "cors";
 const app = Express();
 const PORT = process.env.PORT || 3000;
