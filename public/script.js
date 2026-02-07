@@ -81,21 +81,6 @@ window.addEventListener("click", function (event) {
 });
 
 
-
-
-// // Filtrar por Categoria
-// filtroCategoria.addEventListener("change", function () {
-//   // Aqui será implementado o filtro
-//   console.log("Filtrando categoria:", this.value);
-// });
-
-// // Limpar Filtros
-// btnLimparFiltros.addEventListener("click", function () {
-//   buscarInput.value = "";
-//   filtroCategoria.value = "";
-//   // Carregar todos os produtos novamente
-// });
-
 // Funções placeholder para o backend
 function abrirModalEditar(product) {
   modal.style.display = "block";
