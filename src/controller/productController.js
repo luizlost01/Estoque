@@ -18,8 +18,35 @@ export const create = async (req, res) => {
 };
 
 export const list = async (req, res) => {
-    const products = await productService.getAllProducts()
-    return res.status(200).json(products)
+    const { name, category, price, quantity } = req.query || {};
+    let products = await productService.getAllProducts();
+
+    if (name || category || price !== undefined || quantity !== undefined) {
+        const priceNumber = price !== undefined ? Number(price) : undefined;
+        const quantityNumber = quantity !== undefined ? Number(quantity) : undefined;
+
+        products = products.filter((product) => {
+            if (name && product.name !== name) {
+                return false;
+            }
+            if (category && product.category !== category) {
+                return false;
+            }
+            if (price !== undefined && !Number.isNaN(priceNumber)) {
+                if (product.price !== priceNumber) {
+                    return false;
+                }
+            }
+            if (quantity !== undefined && !Number.isNaN(quantityNumber)) {
+                if (product.quantity !== quantityNumber) {
+                    return false;
+                }
+            }
+            return true;
+        });
+    }
+
+    return res.status(200).json(products);
 }
 
 
