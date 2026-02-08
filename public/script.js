@@ -1,4 +1,18 @@
 // @ts-nocheck
+
+// Verificar autenticação
+const token = localStorage.getItem("token");
+if (!token) {
+    window.location.href = "login.html";
+}
+
+function getAuthHeaders() {
+    return {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+    };
+}
+
 let produtos = [];
 let valorTotalProdutos
 let modal = document.getElementById("modalEditar");
@@ -15,6 +29,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function inicializarPagina() {
   console.log("Página de Estoque pronta para receber dados do backend");
+
+  // Mostrar nome do usuário
+  const userName = localStorage.getItem("userName");
+  if (userName) {
+    document.getElementById("userInfo").textContent = `Olá, ${userName}`;
+  }
+
+  // Logout
+  document.getElementById("btnLogout").addEventListener("click", () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("userName");
+    window.location.href = "login.html";
+  });
+
   carregarProdutos();
 }
 
@@ -30,9 +58,7 @@ formProduto.addEventListener("submit", async function (e) {
 
   const response = await fetch("http://localhost:3000/product", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getAuthHeaders(),
     body: JSON.stringify({ name, category, price, quantity }),
   });
   if (response.ok) {
@@ -57,9 +83,7 @@ formEditar.addEventListener("submit", async function (e) {
 
   const response = await fetch(`http://localhost:3000/product/${id}`, {
     method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
+    headers: getAuthHeaders(),
     body: JSON.stringify({ name, category, price, quantity }),
   });
 
@@ -94,7 +118,8 @@ function abrirModalEditar(product) {
 function deletarProduto(id) {
     if (confirm('Deseja Deletar este produto')) {
         fetch(`http://localhost:3000/product/${id}`, {
-            method: 'DELETE'
+            method: 'DELETE',
+            headers: getAuthHeaders()
         })
         location.reload()
     }
